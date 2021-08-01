@@ -1,0 +1,64 @@
+.main{
+    background:black;
+    padding-top: 8px;
+    padding-left: 10px ;
+    padding-right: 10px;
+}
+
+.fas,icon{
+    color: #ffffffcc;
+    font-size: 20px;
+}
+.input-search{
+    border-radius: 27px;
+}
+.main-chat{
+    border-top: solid 1px #212529 
+    ; margin-top: 10px;min-height: 750px;
+}
+#left-content{
+ border-right: solid 1px white;
+}
+.friend{
+    margin-bottom: 10px;   
+    padding-top: 10px; 
+}
+.fa-search{
+    top: 7px;
+    position: absolute;
+    z-index: 1000;
+    left: 41px;
+}
+.icon{
+    color: rgb(0, 132, 255);
+        font-size: 21px;
+}
+.message{
+    margin-top: 10px;
+}
+.message-f-user{
+    border-radius: 16px;
+    font-size: .875rem;
+    color: white;
+    margin: 0px;
+    border: solid 1px;
+    padding: 4px;
+    margin-bottom: 8px;
+}
+
+.message-f-you{
+    border-radius: 16px;
+    font-size: .875rem;
+    color: white;
+    margin: 0px;
+    border: solid 1px rgb(0, 132, 255);;
+    padding: 4px;
+    margin-bottom: 8px;
+    background: rgb(0, 132, 255);;
+}
+
+.iconChat{
+    color: rgb(0, 132, 255) !important;
+    font-size: 24px !important;
+    margin-left: 10px !important;
+}

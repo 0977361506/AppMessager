@@ -1,0 +1,52 @@
+<html>
+<title>Facebook Style Homepage Design using HTML and CSS</title>
+<head>
+  <link rel="stylesheet" href="/css/singup.css">
+</head>
+<body>
+ <div class="fb-header-base">
+ </div>
+ <div class="fb-header">
+  <form class="login-form" action="/user/api/v1/login" method="post">
+    <div id="img1" class="fb-header"><img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSHKqhFM4WqrWpctl20WumROGdcBxoRohjndQ&usqp=CAU"  style="    max-width: 100px;
+      max-height: 100px;"/></div>
+    <div id="form1" class="fb-header">Email hoặc số điện thoại<br>
+    <input placeholder="Email"  type="email" name="email" /><br>
+    <input type="checkbox" />Lưu thông tin tài khoản</div>
+    <div id="form2" class="fb-header">Mật khẩu<br>
+    <input placeholder="Password" type="password"  type="password" name="password" /><br>
+    Quên mật khẩu ?
+    </div>
+    <input type="submit" class="submit1" value="Đăng nhập" />
+  </form>
+
+	</div>
+ </div>
+	 
+ <div class="fb-body">
+	<div id="intro1" class="fb-body">FaceBook giúp bạn kết nối đến với mọi người trên thế giới .</div>
+	 <div id="intro2" class="fb-body">Tạo tài khoản mới</div>
+	 <div id="img2" class="fb-body"><img src="https://sociable.co/wp-content/uploads/2011/12/Facebook-world.jpg" /></div>
+	 <div id="intro3" class="fb-body">Tạo tài khoản miễn phí .</div>
+	 <div id="form3" class="fb-body">
+  <form class="signup-form" action="/user/api/v1/signup" method="post">
+    
+    <input id="uname" class="form-control mailbox" type="text" name="username" placeholder="Username" /><br>
+    <input id="email"  type="email" class="mailbox" name="email"  placeholder="Email" /><br>
+  
+    <input id="pass" class="input-box mailbox" type="password" name="password"  placeholder="Password"  /><br>
+    <input type="date"  class="mailbox" /><br><br>
+    <p id="intro4">Click vào nút đăng ký tức là bạn đã chấp nhận điều khoản của chúng tôi .</p>
+    <input type="submit" class="button2" value="Tạo tài khoản" />
+   </form>
+	 <br><hr>
+	 </div>
+	 </div>
+<div class="fb-body-footer">
+	<div id="fb-body-footer-base" class="fb-body-footer">Việt Nam (VN)<br><hr>
+	Liên hệ anh hiếu đẹp trai để biết thêm thông tin về sản phẩm &nbsp;&nbsp; 
+  Thiết kế bởi Lê Hiếu</div>
+</div>
+</body>
+<script src="/js/scriptForSignup.js"></script>
+</html>

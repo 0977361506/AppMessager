@@ -1,0 +1,21 @@
+<header>
+  <nav class="navbar navbar-inverse">
+    <div class="container-fluid">
+      <div class="navbar-header">
+        <a href="/" class="boxN">Ứng dụng chat call video trực tuyến </a>
+    </div>
+    <ul class="nav navbar-nav navbar-right">
+        <li class="boxF"><a href="/">Home</a></li>
+        <li class="boxF"><a href="/chat">Chat</a></li>
+        <% if(user){ %>
+          <li  class="boxF"><a href=""><span id="totalOnline" class="badge">0</span>Thành viên Onlines </a></li>
+          <li  class="boxF"><a href="#">Hello, <%= user.username %></a></li>
+          <li  class="boxF"><a href="/user/logout">Đăng xuất</a></li>
+        <% } else{ %>
+          <li class="boxF"><a href="/user/login">Đăng nhập</a></li>
+          <li class="boxF"><a href="/user/signup">Đăng ký tài khoản mới </a></li>
+        <% } %>
+      </ul>
+    </div>
+  </nav>
+</header>
