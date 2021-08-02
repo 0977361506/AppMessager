@@ -57,7 +57,7 @@ module.exports.controller = function(app) {
           delete req.user.password;
           req.session.user = result;
           delete req.session.user.password;
-          res.redirect("/chat");
+          res.redirect("/index");
         }
       }
     );

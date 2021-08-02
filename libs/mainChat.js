@@ -130,9 +130,9 @@ module.exports.sockets = function(http) {
     socket.on('call', (data) => {
       let callee = data.name;
       let rtcMessage = data.rtcMessage;
-
-      socket.to(callee).emit("newCall", {
-          caller: socket.user,
+      console.log("dữ liệu cuộc gọi từ :"+socket.username+"- id : "+userSocket[socket.username]+" đến : "+callee+" - id : "+ userSocket[callee])
+      ioChat.to(userSocket[callee]).emit("newCall", {
+          caller: userSocket[socket.username],
           rtcMessage: rtcMessage
       })
 
@@ -142,8 +142,8 @@ module.exports.sockets = function(http) {
       let caller = data.caller;
       rtcMessage = data.rtcMessage
 
-      socket.to(caller).emit("callAnswered", {
-          callee: socket.user,
+      ioChat.to(userSocket[caller]).emit("callAnswered", {
+          callee:userSocket[socket.username] ,
           rtcMessage: rtcMessage
       })
 
@@ -153,8 +153,8 @@ module.exports.sockets = function(http) {
       let otherUser = data.user;
       let rtcMessage = data.rtcMessage;
 
-      socket.to(otherUser).emit("ICEcandidate", {
-          sender: socket.user,
+      ioChat.to(userSocket[otherUser]).emit("ICEcandidate", {
+          sender:userSocket[socket.username],
           rtcMessage: rtcMessage
       })
   })

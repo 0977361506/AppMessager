@@ -37,6 +37,37 @@ $ (function(){
         showUserConnect(userStack)
     })
 
+    
+    function showUserConnect(userStack){
+        var data = '';
+        for (var v in userStack){
+            data+=`
+            <div userName=`+v+` class="row friend" id="clickUser">
+              <div class="col col-sm-10">
+                  <div class="d-flex">
+                      <div class="image-user">
+                          <img src="https://study.vnpost.vn/static/images/user_techer.png"
+                          style="max-width:40px ; max-height :40px; border-radius: 50%;" />
+                      </div>
+                      <div style="padding-left: 10px">
+                      
+                          <p style="font-size: .875rem; color: white; margin: 0px;">`+v+`</p> `;
+              if(userStack[v]=='Online') data+=` <p style="font-size: 10px; color: white ; margin: 0px;">Đang hoạt động</p>`  
+              else data+= ` <p style="font-size: 10px; color: white ; margin: 0px;">Offline</p>`  
+              data+= ` </div>
+                  </div>
+              </div>
+              <div class="col col-sm-2">
+                  <img src="https://study.vnpost.vn/static/images/user_techer.png"
+                  style="max-width:15px ; max-height :15px; border-radius: 50%;" />
+              </div>
+          </div> `
+
+        }
+        
+        $(".listUser").html(data)
+    }
+
     socket.on("set-room",(roomid)=>{
       
        $(".contentchat").html("")
@@ -133,24 +164,25 @@ $ (function(){
     
     socket.on('newCall', data => {
         //when other called you
-        console.log(data);
-        //show answer button
 
+        
         otherUser = data.caller;
         remoteRTCMessage = data.rtcMessage
+        $('#modalAnswer').modal('show');
+        $('#modalCall').modal('hide');
 
-        // document.getElementById("profileImageA").src = baseURL + callerProfile.image;
-        document.getElementById("callerName").innerHTML = otherUser;
-        document.getElementById("call").style.display = "none";
-        document.getElementById("answer").style.display = "block";
+        // // document.getElementById("profileImageA").src = baseURL + callerProfile.image;
+        // document.getElementById("callerName").innerHTML = otherUser;
+        // document.getElementById("call").style.display = "none";
+        // document.getElementById("answer").style.display = "block";
     })
 
     socket.on('callAnswered', data => {
         //when other accept our call
         remoteRTCMessage = data.rtcMessage
         peerConnection.setRemoteDescription(new RTCSessionDescription(remoteRTCMessage));
-
-        document.getElementById("calling").style.display = "none";
+        
+        // document.getElementById("calling").style.display = "none";
 
         console.log("Call Started. They Answered");
         // console.log(pc);
@@ -184,39 +216,10 @@ $ (function(){
     
  
 
-
+-
     // xử lí logic 
 
    
-    function showUserConnect(userStack){
-        var data = '';
-        for (var v in userStack){
-            data+=`
-            <div userName=`+v+` class="row friend" id="clickUser">
-              <div class="col col-sm-10">
-                  <div class="d-flex">
-                      <div class="image-user">
-                          <img src="https://study.vnpost.vn/static/images/user_techer.png"
-                          style="max-width:40px ; max-height :40px; border-radius: 50%;" />
-                      </div>
-                      <div style="padding-left: 10px">
-                      
-                          <p style="font-size: .875rem; color: white; margin: 0px;">`+v+`</p> `;
-              if(userStack[v]=='Online') data+=` <p style="font-size: 10px; color: white ; margin: 0px;">Đang hoạt động</p>`  
-              else data+= ` <p style="font-size: 10px; color: white ; margin: 0px;">Offline</p>`  
-              data+= ` </div>
-                  </div>
-              </div>
-              <div class="col col-sm-2">
-                  <img src="https://study.vnpost.vn/static/images/user_techer.png"
-                  style="max-width:15px ; max-height :15px; border-radius: 50%;" />
-              </div>
-          </div> `
-
-        }
-        
-        $(".listUser").html(data)
-    }
 
     $(document).on("click","#clickUser",function(){
         var name = $(this).attr("userName")
@@ -252,14 +255,15 @@ $ (function(){
         
         //event from html
     $(document).on("click","#call",function(){
-        let userToCall = username ;
+        let userToCall =   $("#chatWithUser").html() ;
+        console.log("call với" ,userToCall)
         
         otherUser = userToCall;
-
+    
         beReady()
             .then(bool => {   
                 processCall(userToCall);
-                $('#callVideo').modal('show');
+               
              })
     })
 
@@ -268,7 +272,8 @@ $ (function(){
         beReady()
         .then(bool => {
             processAccept();
-            $('#callVideo').modal('show');
+            $('#modalCall').modal('show');
+            $('#modalAnswer').modal('hide');
         })
     })
  
@@ -298,6 +303,7 @@ $ (function(){
     function sendCall(data) {
         //to send a call
         console.log("Send Call");
+        console.log("data truyen cho ben nguoi nghe",data)
         socket.emit("call", data);
     }
 
@@ -350,7 +356,7 @@ $ (function(){
     }
 
     function processAccept() {
-
+        console.log(remoteRTCMessage)
         peerConnection.setRemoteDescription(new RTCSessionDescription(remoteRTCMessage));
         peerConnection.createAnswer((sessionDescription) => {
             peerConnection.setLocalDescription(sessionDescription);
@@ -400,6 +406,7 @@ $ (function(){
             peerConnection.onaddstream = handleRemoteStreamAdded;
             peerConnection.onremovestream = handleRemoteStreamRemoved;
             console.log('Created RTCPeerConnnection');
+            
             return;
         } catch (e) {
             console.log('Failed to create PeerConnection, exception: ' + e.message);
@@ -413,9 +420,9 @@ $ (function(){
         if (event.candidate) {
             console.log("Local ICE candidate");
             // console.log(event.candidate.candidate);
-
+            console.log("otherUser",otherUser)
             sendICEcandidate({
-                user: otherUser,
+                user:otherUser,
                 rtcMessage: {
                     label: event.candidate.sdpMLineIndex,
                     id: event.candidate.sdpMid,
@@ -433,6 +440,8 @@ $ (function(){
         remoteStream = event.stream;
         remoteVideo.srcObject = remoteStream;
     }
+
+
 
     function handleRemoteStreamRemoved(event) {
         console.log('Remote stream removed. Event: ', event);
@@ -462,18 +471,12 @@ $ (function(){
 
     function callProgress() {
 
-        document.getElementById("videos").style.display = "block";
-        document.getElementById("otherUserNameC").innerHTML = otherUser;
-        document.getElementById("inCall").style.display = "block";
+        // document.getElementById("videos").style.display = "block";
+        // document.getElementById("otherUserNameC").innerHTML = otherUser;
+        // document.getElementById("inCall").style.display = "block";
 
         callInProgress = true;
     }
-
-
-
-
-
-
 
 })
 
