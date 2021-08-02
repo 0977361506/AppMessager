@@ -124,40 +124,75 @@ module.exports.sockets = function(http) {
       ioChat.emit("onlineStack", userStack);
     }); //end of disconnect event.
    
+   
+
+    // lắng nghe sự kiện call video 
+
+
+    socket.on("call-user", (data) => {
+      console.log("Gọi đến user : "+data.to+" có id : "+userSocket[data.to] + " from user : "+socket.username + "  có id : "+ userSocket[socket.username])
+      ioChat.to(userSocket[data.to]).emit("call-made", {
+        offer: data.offer,
+        socket: userSocket[socket.username],
+        caller:socket.username
+      });
+    });
+
+
+    // lắng nghe phản hồi từ người nghe
+
+    socket.on("make-answer", data => {
+      console.log("dữ liệu nhận đc từ user : " , data.to)
+      console.log("dữ liệu nhận đc từ user" , data)
+      ioChat.to(data.to).emit("answer-made", {
+        socket:  userSocket[socket.username] ,
+        answer: data.answer
+      });
+    });
+    
+    // trong trường hợp người nghe không bắt máy 
+    //ioChat.to(socket.room) 
+    socket.on("reject-call", data => {
+      socket.to(data.from).emit("call-rejected", {
+        socket: socket.id
+      });
+    });
+
 
 
     // sự kiện vdeo call
-    socket.on('call', (data) => {
-      let callee = data.name;
-      let rtcMessage = data.rtcMessage;
-      console.log("dữ liệu cuộc gọi từ :"+socket.username+"- id : "+userSocket[socket.username]+" đến : "+callee+" - id : "+ userSocket[callee])
-      ioChat.to(userSocket[callee]).emit("newCall", {
-          caller: userSocket[socket.username],
-          rtcMessage: rtcMessage
-      })
 
-  })
+  //   socket.on('call', (data) => {
+  //     let callee = data.name;
+  //     let rtcMessage = data.rtcMessage;
+  //     console.log("dữ liệu cuộc gọi từ :"+socket.username+"- id : "+userSocket[socket.username]+" đến : "+callee+" - id : "+ userSocket[callee])
+  //     ioChat.to(userSocket[callee]).emit("newCall", {
+  //         caller: userSocket[socket.username],
+  //         rtcMessage: rtcMessage
+  //     })
 
-  socket.on('answerCall', (data) => {
-      let caller = data.caller;
-      rtcMessage = data.rtcMessage
+  // })
 
-      ioChat.to(userSocket[caller]).emit("callAnswered", {
-          callee:userSocket[socket.username] ,
-          rtcMessage: rtcMessage
-      })
+  // socket.on('answerCall', (data) => {
+  //     let caller = data.caller;
+  //     rtcMessage = data.rtcMessage
 
-  })
+  //     ioChat.to(userSocket[caller]).emit("callAnswered", {
+  //         callee:userSocket[socket.username] ,
+  //         rtcMessage: rtcMessage
+  //     })
 
-  socket.on('ICEcandidate', (data) => {
-      let otherUser = data.user;
-      let rtcMessage = data.rtcMessage;
+  // })
 
-      ioChat.to(userSocket[otherUser]).emit("ICEcandidate", {
-          sender:userSocket[socket.username],
-          rtcMessage: rtcMessage
-      })
-  })
+  // socket.on('ICEcandidate', (data) => {
+  //     let otherUser = data.user;
+  //     let rtcMessage = data.rtcMessage;
+
+  //     ioChat.to(userSocket[otherUser]).emit("ICEcandidate", {
+  //         sender:userSocket[socket.username],
+  //         rtcMessage: rtcMessage
+  //     })
+  // })
 
   }); //end of io.on(connection).
   //end of socket.io code for chat feature.
