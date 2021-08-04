@@ -130,13 +130,23 @@ module.exports.sockets = function(http) {
 
 
     socket.on("call-user", (data) => {
-      console.log("Gọi đến user : "+data.to+" có id : "+userSocket[data.to] + " from user : "+socket.username + "  có id : "+ userSocket[socket.username])
-      ioChat.to(userSocket[data.to]).emit("call-made", {
+      console.log("Gọi đến user : "+data.to+" có id : "+userSocket[data.to] + " from user : "+socket.username + "  có id : "+ userSocket[socket.username]+" == "+socket.id)
+      socket.to(userSocket[data.to]).emit("call-made", {
         offer: data.offer,
-        socket: userSocket[socket.username],
+        socket: socket.id,
         caller:socket.username
       });
     });
+
+    socket.on("send-ice", (data) => {
+      console.log("gửi ice đến : "+data.to)
+      socket.to(userSocket[data.to]).emit("recever-ice", {
+        ice: data.ice
+      });
+
+    });
+
+
 
 
     // lắng nghe phản hồi từ người nghe
@@ -144,8 +154,8 @@ module.exports.sockets = function(http) {
     socket.on("make-answer", data => {
       console.log("dữ liệu nhận đc từ user : " , data.to)
       console.log("dữ liệu nhận đc từ user" , data)
-      ioChat.to(data.to).emit("answer-made", {
-        socket:  userSocket[socket.username] ,
+      socket.to(data.to).emit("answer-made", {
+        socket: socket.id ,
         answer: data.answer
       });
     });

@@ -14,7 +14,7 @@ $ (function(){
     // let localVideo = document.querySelector('#local-video');
     // let remoteVideo = document.querySelector('#remote-video');
 
-    // let otherUser;
+    let otherUser;
     // let remoteRTCMessage;
 
     // let iceCandidatesFromCaller = [];
@@ -32,8 +32,20 @@ $ (function(){
     const existingCalls = [];
 
     const { RTCPeerConnection, RTCSessionDescription } = window;
-
-    const peerConnection = new RTCPeerConnection();
+    const ICE_SERVERS = {
+        iceServers: [
+          {
+            url: "stun:stun.l.google.com:19302"
+          },
+          {
+            url: "stun:stun.skyway.io:3478"
+          },
+          {
+            url: "stun:iphone-stun.strato-iphone.de:3478"
+          }
+        ]
+      };
+    const peerConnection = new RTCPeerConnection(ICE_SERVERS);
 
 
 
@@ -294,36 +306,44 @@ $ (function(){
     // trả về dữ liệu người gọi từ server
 
     socket.on("call-made", async data => {
-        // if (getCalled) {
-        const confirmed = confirm(
-            `User " ${data.caller}" Muốn gọi cho bạn . Nghe máy ?`
-        );
-    
-        if (!confirmed) {
-            socket.emit("reject-call", {
-            from: data.socket
-            });
-    
-            return;
-        }
-       // }
-      
-        await peerConnection.setRemoteDescription(
-          new RTCSessionDescription(data.offer)
-        );
+      // if (getCalled) {
+            const confirmed = confirm(
+                `User " ${data.caller}" Muốn gọi cho bạn . Nghe máy ?`
+            );
+            if (!confirmed) {
+                socket.emit("reject-call", {
+                from: data.socket
+                });
         
-        const answer = await peerConnection.createAnswer();
-        await peerConnection.setLocalDescription(new RTCSessionDescription(answer));
-        console.log("vào đây")
-        socket.emit("make-answer", {
-          answer,
-          to: data.socket
-        });
-        getCalled = true;
+                return;
+            }else{
+                
+                await peerConnection.setRemoteDescription(
+                    new RTCSessionDescription(data.offer)
+                );
+
+                const answer = await peerConnection.createAnswer();
+                await peerConnection.setLocalDescription(new RTCSessionDescription(answer));
+                console.log("Người dung nghe máy tạo kết nối ")
+                socket.emit("make-answer", {
+                    answer,
+                    to: data.socket
+                });
+            }
+      //  }
+      
+       // getCalled = true;
 
 
     });
     
+    socket.on("recever-ice",data=>{
+       console.log("Nhận ice từ bên gọi")
+       console.log("ice",data)
+       let iceCandidate = new RTCIceCandidate(data.ice);
+       peerConnection.addIceCandidate(iceCandidate).catch(err => console.log(err));
+    })
+
 
     // nghe phản hồi từ server  ( xem nó có nghe máy mình không v: )
 
@@ -359,7 +379,16 @@ $ (function(){
     //     remoteVideo.srcObject = stream;
     //     }
     // };
-    
+    peerConnection.onicecandidate = event => {
+        if (event.candidate != null) {
+            socket.emit("send-ice", {
+                  ice: event.candidate,
+                  to: otherUser
+            });
+        }
+    };
+
+ 
 
     peerConnection.ontrack = event => {
         const stream = event.streams[0];
