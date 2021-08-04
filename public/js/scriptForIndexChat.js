@@ -333,8 +333,6 @@ $ (function(){
           new RTCSessionDescription(data.answer)
         );
         
-
-        
          // $("#modalCall").modal("show") // hiển thị video stream
 
         if (!isAlreadyCalling) {
@@ -355,10 +353,19 @@ $ (function(){
  
     
 
-    peerConnection.ontrack = function({ streams: [stream] }) {
+    // peerConnection.ontrack = function({ streams: [stream] }) {
+    //     const remoteVideo = document.getElementById("remoteVideo");
+    //     if (remoteVideo) {
+    //     remoteVideo.srcObject = stream;
+    //     }
+    // };
+    
+
+    peerConnection.ontrack = event => {
+        const stream = event.streams[0];
         const remoteVideo = document.getElementById("remoteVideo");
-        if (remoteVideo) {
-        remoteVideo.srcObject = stream;
+        if (!remoteVideo.srcObject || remoteVideo.srcObject.id !== stream.id) {
+          remoteVideo.srcObject = stream;
         }
     };
 
