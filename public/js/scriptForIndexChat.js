@@ -380,7 +380,12 @@ $ (function(){
     //     }
     // };
     peerConnection.onicecandidate = event => {
+        
         if (event.candidate != null) {
+            let userToCall =   $("#chatWithUser").html() ;
+            console.log("call với" ,userToCall)
+            
+            otherUser = userToCall;
             console.log("send cho : "+otherUser)
             socket.emit("send-ice", {
                   ice: event.candidate,
@@ -390,6 +395,7 @@ $ (function(){
     };
 
     peerConnection.onaddstream = function( evt ) {
+        
         remoteStream = evt.stream;
         const remoteVideo = document.getElementById("remoteVideo");
         if (!remoteVideo.srcObject || remoteVideo.srcObject.id !== stream.id) {
