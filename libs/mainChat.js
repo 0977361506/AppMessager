@@ -131,7 +131,7 @@ module.exports.sockets = function(http) {
 
     socket.on("call-user", (data) => {
       console.log("Gọi đến user : "+data.to+" có id : "+userSocket[data.to] + " from user : "+socket.username + "  có id : "+ userSocket[socket.username]+" == "+socket.id)
-      socket.to(userSocket[data.to]).emit("call-made", {
+      ioChat.to(userSocket[data.to]).emit("call-made", {
         offer: data.offer,
         socket: socket.id,
         caller:socket.username
@@ -140,7 +140,7 @@ module.exports.sockets = function(http) {
 
     socket.on("send-ice", (data) => {
       console.log("gửi ice đến : "+data.to)
-      socket.to(userSocket[data.to]).emit("recever-ice", {
+      ioChat.to(userSocket[data.to]).emit("recever-ice", {
         ice: data.ice
       });
 
@@ -152,9 +152,9 @@ module.exports.sockets = function(http) {
     // lắng nghe phản hồi từ người nghe
 
     socket.on("make-answer", data => {
-      console.log("dữ liệu nhận đc từ user : " , data.to)
-      console.log("dữ liệu nhận đc từ user" , data)
-      socket.to(data.to).emit("answer-made", {
+      console.log("trả cho người gọi : " , data.to)
+      console.log("dữ liệu trả cho người gọi" , data)
+      ioChat.to(data.to).emit("answer-made", {
         socket: socket.id ,
         answer: data.answer
       });

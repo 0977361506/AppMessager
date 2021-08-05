@@ -381,6 +381,7 @@ $ (function(){
     // };
     peerConnection.onicecandidate = event => {
         if (event.candidate != null) {
+            console.log("send cho : "+otherUser)
             socket.emit("send-ice", {
                   ice: event.candidate,
                   to: otherUser
@@ -388,15 +389,20 @@ $ (function(){
         }
     };
 
- 
-
-    peerConnection.ontrack = event => {
-        const stream = event.streams[0];
+    peerConnection.onaddstream = function( evt ) {
+        remoteStream = evt.stream;
         const remoteVideo = document.getElementById("remoteVideo");
         if (!remoteVideo.srcObject || remoteVideo.srcObject.id !== stream.id) {
-          remoteVideo.srcObject = stream;
+          remoteVideo.srcObject = remoteStream;
         }
-    };
+    }
+    // peerConnection.ontrack = event => {
+    //     const stream = event.streams[0];
+    //     const remoteVideo = document.getElementById("remoteVideo");
+    //     if (!remoteVideo.srcObject || remoteVideo.srcObject.id !== stream.id) {
+    //       remoteVideo.srcObject = stream;
+    //     }
+    // };
 
     navigator.getUserMedia(
         { video: true, audio: true },
@@ -407,6 +413,7 @@ $ (function(){
         }
     
         stream.getTracks().forEach(track => peerConnection.addTrack(track, stream));
+        peerConnection.addStream(stream);
         },
         error => {
         console.warn(error.message);
