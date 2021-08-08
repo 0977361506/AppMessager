@@ -23,10 +23,10 @@ require("./libs/mainChat.js").sockets(http); // test
 app.use(logger("dev"));
 
 //db connection
-// const dbPath = "mongodb://localhost/socketChatDB";
+const dbPath = "mongodb://localhost/socketChatDB";
 
 
- const dbPath="mongodb+srv://0977361506:0977361506@cluster0.kzuv8.mongodb.net/socketChatDB?retryWrites=true&w=majority";
+ //const dbPath="mongodb+srv://0977361506:0977361506@cluster0.kzuv8.mongodb.net/socketChatDB?retryWrites=true&w=majority";
 
 
 // const dbPath = `mongodb://github_demo:Pass\#12@ds149511.mlab.com:49511/socketionodejschat`;
@@ -124,79 +124,3 @@ http.listen(port, function() {
 });
 
 
-// let express = require( 'express' );
-// let app = express();
-// let server = require( 'http' ).Server( app );
-// let io = require( 'socket.io' )( server );
-// let stream = require( './ws/stream' );
-// let path = require( 'path' );
-
-// var activeSockets = new Array();
-// app.use( '/assets', express.static( path.join( __dirname, 'assets' ) ) );
-
-// app.get( '/', ( req, res ) => {
-//     res.sendFile( __dirname + '/login.html' );
-// } );
-
-// app.get( '/index', ( req, res ) => {
-//     res.sendFile( __dirname + '/index.html' );
-// } );
-
-
-// io.on("connection", function(socket) { 
-   
-//     console.log("New user connected ... !")
-//     // socket.on('login',(username)=>{
-   
-//     const existingSocket = activeSockets.find(
-//     existingSocket => existingSocket === socket.id
-//     );
-
-//     if (!existingSocket) {
-//         activeSockets.push(socket.id);
-//         // console.log(activeSockets)
-//         socket.emit("update_list_user_active", {
-//             users:activeSockets.filter(
-//             existingSocket => existingSocket !== socket.id
-//             )
-//         });
-
-//         socket.broadcast.emit("update_list_user_active", {
-//             users: [socket.id]
-//         });
-//     }
-
-//     socket.on("call-user", (data) => {
-       
-//         socket.to(data.to).emit("call-made", {
-//             offer: data.offer,
-//             socket: socket.id
-//         });
-//     });
-
-
-//     socket.on("make-answer", data => {
-//         console.log(data)
-//         socket.to(data.to).emit("answer-made", {
-//             socket: socket.id,
-//             answer: data.answer
-//         });
-//     });
-
-//     socket.on("reject-call", data => {
-//     socket.to(data.from).emit("call-rejected", {
-//         socket: socket.id
-//     });
-//     });
-
-//     socket.on("disconnect", () => {
-//     activeSockets = activeSockets.filter(
-//         existingSocket => existingSocket !== socket.id
-//     );
-//     socket.broadcast.emit("remove-user", {
-//         socketId: socket.id
-//     });
-//     });
-//     // })
-//  });
-// server.listen( 3333 );
