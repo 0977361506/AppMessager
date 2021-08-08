@@ -108,19 +108,7 @@ module.exports.sockets = function(http) {
         date: data.date
       });
     });
-     
-    // nhận sự kiện gửi file từ dưới client 
 
-    socket.on("file-meta",function(data){
-      ioChat.to(socket.room).emit("fs-meta",
-        {
-          msgFrom: socket.username,
-          data : data.metadata
-        }
-      );
-    });
-
-  //
     //for popping disconnection message.
     socket.on("disconnect", function() {
       console.log(socket.username + "  logged out");
