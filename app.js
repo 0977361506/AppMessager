@@ -23,10 +23,10 @@ require("./libs/mainChat.js").sockets(http); // test
 app.use(logger("dev"));
 
 //db connection
-const dbPath = "mongodb://localhost/socketChatDB";
+//const dbPath = "mongodb://localhost/socketChatDB";
 
 
- //const dbPath="mongodb+srv://0977361506:0977361506@cluster0.kzuv8.mongodb.net/socketChatDB?retryWrites=true&w=majority";
+const dbPath="mongodb+srv://0977361506:0977361506@cluster0.kzuv8.mongodb.net/socketChatDB?retryWrites=true&w=majority";
 
 
 // const dbPath = `mongodb://github_demo:Pass\#12@ds149511.mlab.com:49511/socketionodejschat`;
