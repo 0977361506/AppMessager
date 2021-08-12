@@ -33,30 +33,22 @@ $ (function(){
 
     const { RTCPeerConnection, RTCSessionDescription } = window;
     const ICE_SERVERS = {
-        iceServers: [
-        //   {
-        //     url:  'stun:stun.l.google.com:19302'
-        //   },
-        //   {
-        //     url: 'stun:stun1.l.google.com:19302'
-        //   },
-        //   {
-        //     url: "stun:stun2.l.google.com:19302"
-        //   },
-        //   {
-        //     url: "stun:stun.l.google.com:19302?transport=udp"
-        //   }
-        {
+        iceServers: [{
+            urls: [ "stun:hk-turn1.xirsys.com" ]
+         }, {
+            username: "1AeBDJ1vWpkEk95GCEo6kNhiG5ObszFK97QVUF4XnsD1OaNDiPuZalFMVapHl8dbAAAAAGEUyl5oaWV1",
+            credential: "f494f448-fb3c-11eb-ab55-0242ac120004",
             urls: [
-              "turn:ss-turn1.xirsys.com:80?transport=udp",
-              "turn:ss-turn1.xirsys.com:3478?transport=udp",
-              "turn:ss-turn1.xirsys.com:80?transport=tcp",
-              "turn:ss-turn1.xirsys.com:3478?transport=tcp",
-              "turns:ss-turn1.xirsys.com:443?transport=tcp",
-              "turns:ss-turn1.xirsys.com:5349?transport=tcp",
+                "turn:hk-turn1.xirsys.com:80?transport=udp",
+                "turn:hk-turn1.xirsys.com:3478?transport=udp",
+                "turn:hk-turn1.xirsys.com:80?transport=tcp",
+                "turn:hk-turn1.xirsys.com:3478?transport=tcp",
+                "turns:hk-turn1.xirsys.com:443?transport=tcp",
+                "turns:hk-turn1.xirsys.com:5349?transport=tcp"
             ]
-          }
-        ]
+         }]
+         
+         
       };
 
     
