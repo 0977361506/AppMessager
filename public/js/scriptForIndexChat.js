@@ -35,16 +35,23 @@ $ (function(){
     const ICE_SERVERS = {
         iceServers: [
           {
-            url: "stun:stun.l.google.com:19302"
+            url:  'stun:stun.l.google.com:19302'
           },
           {
-            url: "stun:stun.skyway.io:3478"
+            url: 'stun:stun1.l.google.com:19302'
           },
           {
-            url: "stun:iphone-stun.strato-iphone.de:3478"
+            url: "stun:stun2.l.google.com:19302"
+          },
+          {
+            url: "stun:stun.l.google.com:19302?transport=udp"
           }
         ]
       };
+
+
+
+
     const peerConnection = new RTCPeerConnection(ICE_SERVERS);
 
 
@@ -148,7 +155,7 @@ $ (function(){
     
       });
       
-    socket.on("chat-msg",(v)=>{
+    socket.on("chat-msg",(v)=>{ 
         var  dataMessage =``
         if(v.msgFrom!=username){
             dataMessage+=` 
@@ -188,63 +195,115 @@ $ (function(){
     
 
     
+     // send file
+    $("#sendAllFile").click(function(){
+        $("#sendding").click();
+        console.log("click send file")
+    })
 
     
-    // socket.on('newCall', data => {
-    //     //when other called you
-
-        
-    //     otherUser = data.caller;
-    //     remoteRTCMessage = data.rtcMessage
-    //     $('#modalAnswer').modal('show');
-    //     $('#modalCall').modal('hide');
-
-    //     // // document.getElementById("profileImageA").src = baseURL + callerProfile.image;
-    //     // document.getElementById("callerName").innerHTML = otherUser;
-    //     // document.getElementById("call").style.display = "none";
-    //     // document.getElementById("answer").style.display = "block";
-    // })
-
-    // socket.on('callAnswered', data => {
-    //     //when other accept our call
-    //     remoteRTCMessage = data.rtcMessage
-    //     peerConnection.setRemoteDescription(new RTCSessionDescription(remoteRTCMessage));
-        
-    //     // document.getElementById("calling").style.display = "none";
-
-    //     console.log("Call Started. They Answered");
-    //     // console.log(pc);
-
-    //     callProgress()
-    // })
-
-    // socket.on('ICEcandidate', data => {
-    //     // console.log(data);
-    //     console.log("GOT ICE candidate");
-
-    //     let message = data.rtcMessage
-
-    //     let candidate = new RTCIceCandidate({
-    //         sdpMLineIndex: message.label,
-    //         candidate: message.candidate
-    //     });
-
-    //     if (peerConnection) {
-    //         console.log("ICE candidate Added");
-    //         peerConnection.addIceCandidate(candidate);
-    //     } else {
-    //         console.log("ICE candidate Pushed");
-    //         iceCandidatesFromCaller.push(candidate);
-    //     }
-
-    // })
-
     
-    // socket lăng nghe c function 
+	document.querySelector("#sendding").addEventListener("change",function(e){
+		let file = e.target.files[0];
+		console.log(file.type)
+		if(!file){
+			return;		
+		}
+		let reader = new FileReader();
+		reader.onload = function(e){
+			let buffer = new Uint8Array(reader.result);
+
+
+            socket.emit("file-meta", {
+                metadata:{
+                    filename: file.name,
+                    total_buffer_size:buffer.length,
+                    buffer_size:1024,
+                    typeFile : file.type,
+                    reader : reader.result,
+                    buffer :buffer,
+                    file :file
+                }
+            });
+            
+            // nhận dữ liệu file từ bên gửi lên cho server trả về
     
- 
+     
+		}
+		reader.readAsArrayBuffer(file);
+	});
+
+      
+    socket.on("fs-meta",(data)=>{
+    
+        var  dataMessage =``
+        var src = ``;
+        var elementFile =``;
+        console.log("loại dữ liêu" ,data.data.typeFile)
+        if(data.data.typeFile=='image/jpeg' || data.data.typeFile=='image/jpg' ||data.data.typeFile=='image/gif' || data.typeFile==='image/png' || data.data.typeFile =='image/webp'){
+            const blob = new Blob([data.data.reader], {type: 'image/png'});  // ảnh 
+            console.log("ảnh")
+            src += URL.createObjectURL(blob);
+            console.log("src",src)
+            elementFile +=`<img src=`+src.trim()+` style="max-width: 300px; max-height: 300px;" />`
+        }else if(data.data.typeFile=='video/mp4' ||data.data.typeFile=='video/3gpp'|| data.data.typeFile=='video/webm' ||data.data.typeFile=='video/wmb'){
+            let videoBlob = new Blob([data.data.buffer], { type: 'video/mp4' });
+            src += window.URL.createObjectURL(videoBlob);
+            console.log("src",src)
+            elementFile+=`<video autoplay controls id="video" src=`+src.trim()+` style="max-width: 300px; max-height: 300px;"></video>`
+        }else if (data.data.typeFile =='audio/mp3'|| data.data.typeFile =='audio/wav' ||  data.data.typeFile == 'audio/mpeg'){
+            let audioBlob =null ;
+            if(data.data.typeFile =='audio/wav'){
+                audioBlob =new Blob([data.data.buffer], { type: "audio/wav" });
+            }else {
+                audioBlob =new Blob([data.data.buffer], { type: "audio/mp3" });
+            }
+            src += window.URL.createObjectURL(audioBlob);
+            console.log("src",src)
+            elementFile+=`<audio controls autoplay src=`+src.trim()+` style="max-width: 300px; max-height:80px;" />`
+        }else {
+            elementFile+=`<p style="color :white">`+data.data.filename+`</p>`
+        }
+
+        if(data.msgFrom!=username){
+
+            dataMessage+=` 
+              <div class="d-flex justify-content-start comment-user">
+                  <div class="message">
+                      <div class="d-flex">
+                          <div class="image-user">
+                              <img src="https://study.vnpost.vn/static/images/user_techer.png"
+                              style="max-width:40px ; max-height :40px; border-radius: 50%;" />
+                          </div>
+                          <div style="padding-left: 10px   ;  min-width: 400px;" class="list-comment-user" >
+                             `+elementFile+`
+                          </div>
+                  </div>
+                  </div>
+              </div>`
+         }else{
+             dataMessage+=`
+              <div class="d-flex justify-content-end comment-you">
+                  <div class="message">
+                      <div class="d-flex">
+                          <!-- <div class="image-user">
+                              <img src="https://scontent.fhan14-2.fna.fbcdn.net/v/t1.6435-1/cp0/p80x80/176368141_1193350064449159_5082408654114027829_n.jpg?_nc_cat=102&ccb=1-3&_nc_sid=7206a8&_nc_ohc=Zpn2S34cOicAX9d0Sx4&_nc_ht=scontent.fhan14-2.fna&oh=eefab7227b21d7d6f7be5d31985f31dd&oe=60FD41DD"
+                              style="max-width:40px ; max-height :40px; border-radius: 50%;" />
+                          </div> -->
+                          <div style="padding-left: 10px ; min-width: 400px;" class="list-comment-user">
+                          `+elementFile+`
+                      </div>
+                  </div>
+                  </div>
+             </div>
+             `
+         }
+       $("#sendMessage").val("");
+       $("#contentchat").append(dataMessage)
+    })
 
 -
+ 
     // xử lí logic 
 
    
@@ -371,14 +430,7 @@ $ (function(){
         })
     })
  
-    
 
-    // peerConnection.ontrack = function({ streams: [stream] }) {
-    //     const remoteVideo = document.getElementById("remoteVideo");
-    //     if (remoteVideo) {
-    //     remoteVideo.srcObject = stream;
-    //     }
-    // };
     peerConnection.onicecandidate = event => {
         
         if (event.candidate != null) {

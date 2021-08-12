@@ -16,4 +16,4 @@ module.exports.controller = function(app) {
   });
 
   app.use(router);
-}; //home controller end.
+}; 
