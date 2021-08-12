@@ -34,20 +34,32 @@ $ (function(){
     const { RTCPeerConnection, RTCSessionDescription } = window;
     const ICE_SERVERS = {
         iceServers: [
-          {
-            url:  'stun:stun.l.google.com:19302'
-          },
-          {
-            url: 'stun:stun1.l.google.com:19302'
-          },
-          {
-            url: "stun:stun2.l.google.com:19302"
-          },
-          {
-            url: "stun:stun.l.google.com:19302?transport=udp"
+        //   {
+        //     url:  'stun:stun.l.google.com:19302'
+        //   },
+        //   {
+        //     url: 'stun:stun1.l.google.com:19302'
+        //   },
+        //   {
+        //     url: "stun:stun2.l.google.com:19302"
+        //   },
+        //   {
+        //     url: "stun:stun.l.google.com:19302?transport=udp"
+        //   }
+        {
+            urls: [
+              "turn:ss-turn1.xirsys.com:80?transport=udp",
+              "turn:ss-turn1.xirsys.com:3478?transport=udp",
+              "turn:ss-turn1.xirsys.com:80?transport=tcp",
+              "turn:ss-turn1.xirsys.com:3478?transport=tcp",
+              "turns:ss-turn1.xirsys.com:443?transport=tcp",
+              "turns:ss-turn1.xirsys.com:5349?transport=tcp",
+            ]
           }
         ]
       };
+
+    
 
 
 
